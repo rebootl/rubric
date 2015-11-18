@@ -3,9 +3,19 @@
 from Subpath import Subpath
 
 
+class Config:
+
+    def __init__(self, CONTENT_DIR, TEMPLATE_DIR, PAGE_EXT):
+        self.CONTENT_DIR = CONTENT_DIR
+        self.TEMPLATE_DIR = TEMPLATE_DIR
+        self.PAGE_EXT = PAGE_EXT
+
+
 class Site:
 
-    def __init__(self):
+    def __init__(self, CONTENT_DIR, TEMPLATE_DIR, PAGE_EXT=".page"):
+        self.config = Config(CONTENT_DIR, TEMPLATE_DIR, PAGE_EXT)
+
         self.rubrics = []
         self.pages = []
 

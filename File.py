@@ -3,21 +3,22 @@
 import os
 import json
 
-import config
 
 class File:
 
-    def __init__(self, name, subpath):
-        self.name = name
+    def __init__(self, subpath, name):
         self.subpath = subpath
+        self.name = name
 
-        self.filepath_abs = os.path.join(config.CONTENT_DIR, subpath, name)
+        self.filepath_abs = os.path.join( subpath.site.config.CONTENT_DIR,
+                                          subpath.subpath,
+                                          name )
 
 
 class ContentFile(File):
 
-    def __init__(self, name, subpath):
-        super().__init__(name, subpath)
+    def __init__(self, subpath, name):
+        super().__init__(subpath, name)
 
         self.meta, self.body_md = read_content_file(self.filepath_abs)
 

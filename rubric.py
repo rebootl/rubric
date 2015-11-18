@@ -37,7 +37,8 @@ from Site import Site
 
 def script():
 
-    site = Site()
+    site = Site( CONTENT_DIR = "/home/cem/website_rubric/content/",
+                 TEMPLATE_DIR = "/home/cem/website_rubric/templates/" )
     # this already loads content from the content directory
     # set in config.CONTENT_DIR
     #

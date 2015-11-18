@@ -2,8 +2,6 @@
 
 import os
 
-import config
-
 from File import ContentFile
 from Page import Page, HomePage
 from Rubric import Rubric
@@ -16,7 +14,7 @@ class Subpath:
         self.site = content.site
         self.subpath = subpath
 
-        self.path_abs = os.path.join(config.CONTENT_DIR, subpath)
+        self.path_abs = os.path.join(self.site.config.CONTENT_DIR, subpath)
 
         self.content_files = []
 
@@ -32,8 +30,8 @@ class Subpath:
         print(dir_content)
         # get content files
         for filename in dir_content:
-            if filename.endswith(config.PAGE_EXT):
-                file = ContentFile(filename, self.subpath)
+            if filename.endswith(self.site.config.PAGE_EXT):
+                file = ContentFile(self, filename)
                 self.content_files.append(file)
 
         # create page instances
