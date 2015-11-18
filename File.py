@@ -3,7 +3,6 @@
 import os
 import json
 
-
 class File:
 
     def __init__(self, subpath, name):
