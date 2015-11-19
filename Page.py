@@ -73,7 +73,8 @@ class Page:
                              '--template='+template_path,
                              '--variable=title:'+self.title,
                              '--variable=author:'+self.author,
-                             '--variable=date:'+self.date ]
+                             '--variable=date:'+self.date,
+                             '--variable=header-title:'+self.header_title ]
 
     def write_out(self):
         write_out(self.page_html, self.out_filepath)
@@ -83,9 +84,24 @@ class HomePage(Page):
     def __init__(self, content_file):
         super().__init__(content_file)
 
+        self.template = "default.html5"
+
         self.out_path = self.site.config.PUBLISH_DIR
         self.out_filename = "index.html"
         self.out_filepath = os.path.join(self.out_path, self.out_filename)
 
+        self.header_title = ""
+
+class RubricPage(Page):
+
+    def __init__(self, content_file):
+        super().__init__(content_file)
+
         self.template = "default.html5"
 
+        self.out_path = os.path.join( self.site.config.PUBLISH_DIR,
+                                      self.title )
+        self.out_filename = "index.html"
+        self.out_filepath = os.path.join(self.out_path, self.out_filename)
+
+        self.header_title = self.title

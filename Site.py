@@ -26,13 +26,14 @@ class Site:
                               PAGE_EXT )
 
         self.rubrics = []
+        self.pages_all = []
         self.pages = []
 
         # load content
         self.content = Content(self)
 
         # process pages
-        for page in self.pages:
+        for page in self.pages_all:
             page.process()
 
     def get_rubric_by_name(self, rubric_name):

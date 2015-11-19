@@ -3,7 +3,7 @@
 import os
 
 from File import ContentFile
-from Page import Page, HomePage
+from Page import Page, HomePage, RubricPage
 from Rubric import Rubric
 
 class Subpath:
@@ -27,7 +27,7 @@ class Subpath:
 
         # get dir content
         dir_content = os.listdir(self.path_abs)
-        print(dir_content)
+
         # get content files
         for filename in dir_content:
             if filename.endswith(self.site.config.PAGE_EXT):
@@ -43,30 +43,36 @@ class Subpath:
 
         if type == "home":
             page_inst = HomePage(file)
-            self.site.pages.append(page_inst)
             self.site.homepage = page_inst
+            self.site.pages.append(page_inst)
+            self.site.pages_all.append(page_inst)
 
-        elif type == "base":
+        elif type == "norubric":
             page_inst = Page(file)
             self.site.pages.append(page_inst)
+            self.site.pages_all.append(page_inst)
 
         elif type == "rubric":
             rubric = self.new_rubric(file.meta['title'])
 
             # --> evtl. RubricPage
-            page_inst = Page(file)
-            rubric.pages.append(page_inst)
+            page_inst = RubricPage(file)
             rubric.rubric_page = page_inst
+            # (one for now, could be several later)
+            # (don't add here for now)
+            #rubric.pages.append(page_inst)
+            self.site.pages_all.append(page_inst)
 
         else:
             rubric = self.new_rubric(type)
 
             page_inst = Page(file)
             rubric.pages.append(page_inst)
+            self.site.pages_all.append(page_inst)
 
     def new_rubric(self, rubric_name):
         rubric = self.site.get_rubric_by_name(rubric_name)
         if not rubric:
-            rubric = Rubric(rubric_name)
-            self.site.rubrics.append(rubric)
+            rubric = Rubric(self.site, rubric_name)
+
         return rubric

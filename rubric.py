@@ -15,14 +15,14 @@
 # - home          (home page, only one)
 # - rubric        (main rubrics page, one per rubric)
 # - <rubric name> (content page)
-# - other
+# - norubric      (other, e.g. about page)
 #
 #
 #  content                     public
 #
 #   home ------------------> index.html
 #
-#   base ------------------> <title-url-compat>.html (e.g. about page)
+#   norubric --------------> <title-url-compat>.html (e.g. about page)
 #
 #   rubric ----------------> <rubric name>/index.html
 #
@@ -53,6 +53,9 @@ def script():
 
     for subpath in site.content.subpaths:
         print(subpath.subpath)
+
+    for page in site.pages:
+        print(page.title)
 
         #for page in subpath.pages:
         #    print(page.title)
