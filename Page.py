@@ -77,6 +77,9 @@ class Page:
         # write out
         self.write_out()
 
+        # copy files
+        self.copy_files()
+
     def prepare_pandoc(self):
 
         template_path = os.path.join( self.site.config.TEMPLATE_DIR,
@@ -97,6 +100,17 @@ class Page:
     def write_out(self):
         out_filepath = os.path.join(self.out_dir, self.out_filename)
         write_out(self.page_html, out_filepath)
+
+    def copy_files(self):
+        for file in self.files:
+            in_path_abs = os.path.join( self.site.config.CONTENT_DIR,
+                                        self.subpath.subpath,
+                                        file )
+            if not os.path.isfile(in_path_abs):
+                print("Warning: File not found:", file)
+                continue
+            copy_file(in_path_abs, self.out_dir)
+
 
 class HomePage(Page):
 
