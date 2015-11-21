@@ -1,7 +1,7 @@
 '''main site objects'''
 
 from Subpath import Subpath
-
+from Menu import RubricList
 
 class Config:
 
@@ -26,14 +26,16 @@ class Site:
                               PAGE_EXT )
 
         self.rubrics = []
-        self.pages_all = []
         self.pages = []
 
         # load content
         self.content = Content(self)
 
+        # generate rubric list
+        self.rubric_list = RubricList(self)
+
         # process pages
-        for page in self.pages_all:
+        for page in self.pages:
             page.process()
 
     def get_rubric_by_name(self, rubric_name):

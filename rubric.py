@@ -55,7 +55,7 @@ def script():
         print(subpath.subpath)
 
     for page in site.pages:
-        print(page.title)
+        print(page.variables['title'])
 
         #for page in subpath.pages:
         #    print(page.title)

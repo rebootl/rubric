@@ -28,16 +28,30 @@ from common import pandoc_pipe, write_out
 
 class Page:
 
+    # for processing currently needed are:
+    # .site
+    # .variables        (dict of pandoc variables)
+    # .template         (pandoc template name)
+    # .header_title     (header title, for my use usually the Rubric name)
+    # .body_md
+    # .out_path
+    # .out_filename
+    # .files            (list of associated files) --> not yet used
+
     def __init__(self, content_file):
         self.content_file = content_file
         self.subpath = self.content_file.subpath
         self.site = self.content_file.subpath.site
+        self.site.pages.append(self)
 
-        self.title = content_file.meta['title']
-        self.author = content_file.meta['author']
-        self.date = content_file.meta['date']
-        self.type = content_file.meta['type']
-        self.files = content_file.meta['files']
+        self.variables = self.content_file.meta
+        self.body_md = self.content_file.body_md
+
+        self.title = self.variables['title']
+        self.author = self.variables['author']
+        self.date = self.variables['date']
+        self.type = self.content_file.type
+        self.files = self.content_file.files
 
         self.create_date_obj()
         # (sets self.date_obj)
@@ -50,13 +64,12 @@ class Page:
             self.date_obj = None
 
     def process(self):
-        pass
         # --> substitute and process plugin content
 
         # process through pandoc
         self.prepare_pandoc()
 
-        self.page_html = pandoc_pipe( self.content_file.body_md,
+        self.page_html = pandoc_pipe( self.body_md,
                                       self.pandoc_opts )
 
         # --> back-substitute plugin content
@@ -70,38 +83,60 @@ class Page:
                                       self.template )
 
         self.pandoc_opts = [ '--to=html5',
-                             '--template='+template_path,
-                             '--variable=title:'+self.title,
-                             '--variable=author:'+self.author,
-                             '--variable=date:'+self.date,
-                             '--variable=header-title:'+self.header_title ]
+                             '--template='+template_path ]
+
+        # add variables
+        self.variables['header-title'] = self.header_title
+        self.variables['rubric-list'] = self.site.rubric_list.menu
+
+        for key in self.variables.keys():
+            self.pandoc_opts.append( '--variable=' + key
+                                                   + ':'
+                                                   + self.variables[key] )
 
     def write_out(self):
-        write_out(self.page_html, self.out_filepath)
+        out_filepath = os.path.join(self.out_dir, self.out_filename)
+        write_out(self.page_html, out_filepath)
 
 class HomePage(Page):
 
     def __init__(self, content_file):
         super().__init__(content_file)
+        self.site.homepage = self
 
         self.template = "default.html5"
 
-        self.out_path = self.site.config.PUBLISH_DIR
         self.out_filename = "index.html"
-        self.out_filepath = os.path.join(self.out_path, self.out_filename)
+        self.out_dir = self.site.config.PUBLISH_DIR
 
         self.header_title = ""
 
 class RubricPage(Page):
 
-    def __init__(self, content_file):
+    def __init__(self, content_file, rubric):
         super().__init__(content_file)
+        self.rubric = rubric
+        self.rubric.rubric_page = self
+        # (one for now, could be several later)
+        # (don't add here for now)
+        #rubric.pages.append(page_inst)
 
         self.template = "default.html5"
 
-        self.out_path = os.path.join( self.site.config.PUBLISH_DIR,
-                                      self.title )
         self.out_filename = "index.html"
-        self.out_filepath = os.path.join(self.out_path, self.out_filename)
+        self.out_dir = os.path.join( self.site.config.PUBLISH_DIR,
+                                     self.title )
+
+        self.header_title = self.title
+
+class NoRubricPage(Page):
+
+    def __init__(self, content_file):
+        super().__init__(content_file)
+        self.template = "default.html5"
+
+        # change to "url encoded" later
+        self.out_filename = os.path.splitext(content_file.name)[0] + '.html'
+        self.out_dir = self.site.config.PUBLISH_DIR
 
         self.header_title = self.title
