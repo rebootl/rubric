@@ -14,6 +14,13 @@ class Config:
         # date format (acc. to Python datetime.datetime.strptime)
         self.DATE_FORMAT = "%Y-%m-%d"
 
+        # default meta information
+        self.DEFAULT_META_DICT = {
+            'title': "Warning: No title set in content file.",
+            'author': "Warning: No author set in content file.",
+            'date': "Warning: No date set in content file." 
+        }
+
 
 class Site:
 

@@ -55,17 +55,15 @@ class Subpath:
         elif type == "norubric":
             page_inst = NoRubricPage(file)
 
-        elif type == "rubric":
-            rubric = self.new_rubric(file.meta['title'])
-
-            # --> evtl. RubricPage
+        elif type == "rubricpage":
+            rubric = self.new_rubric(file.rubric_name)
             page_inst = RubricPage(file, rubric)
 
         else:
-            rubric = self.new_rubric(type)
+            rubric = self.new_rubric(file.rubric_name)
 
-            page_inst = Page(file)
-            rubric.pages.append(page_inst)
+            #page_inst = Page(file)
+            #rubric.pages.append(page_inst)
 
     def new_rubric(self, rubric_name):
         rubric = self.site.get_rubric_by_name(rubric_name)

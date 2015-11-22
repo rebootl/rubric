@@ -12,7 +12,7 @@
 #      "title":  "Welcome Home",
 #      "author": "Cem",
 #      "date":   "2015-11-16",
-#      "type":   "home page",
+#      "type":   "home",
 #      "files":  []
 #    }
 #    %%%
@@ -24,7 +24,7 @@
 import os
 from datetime import datetime
 
-from common import pandoc_pipe, write_out
+from common import pandoc_pipe, write_out, copy_file
 
 class Page:
 
@@ -44,17 +44,21 @@ class Page:
         self.site = self.content_file.subpath.site
         self.site.pages.append(self)
 
-        self.variables = self.content_file.meta
+        self.meta = self.content_file.meta
+        self.variables = {}
         self.body_md = self.content_file.body_md
 
-        self.title = self.variables['title']
-        self.author = self.variables['author']
-        self.date = self.variables['date']
+        self.title = self.meta['title']
+        self.author = self.meta['author']
+        self.date = self.meta['date']
         self.type = self.content_file.type
         self.files = self.content_file.files
+        #self.rubric_name = self.content_file.rubric_name
 
         self.create_date_obj()
         # (sets self.date_obj)
+
+        self.template = "default.html5"
 
     def create_date_obj(self):
         try:
@@ -88,6 +92,12 @@ class Page:
         self.pandoc_opts = [ '--to=html5',
                              '--template='+template_path ]
 
+        # add default meta variables
+        for key in self.site.config.DEFAULT_META_DICT:
+            self.pandoc_opts.append( '--variable=' + key
+                                                   + ':'
+                                                   + self.meta[key] )
+
         # add variables
         self.variables['header-title'] = self.header_title
         self.variables['rubric-list'] = self.site.rubric_list.menu
@@ -118,8 +128,6 @@ class HomePage(Page):
         super().__init__(content_file)
         self.site.homepage = self
 
-        self.template = "default.html5"
-
         self.out_filename = "index.html"
         self.out_dir = self.site.config.PUBLISH_DIR
 
@@ -135,22 +143,46 @@ class RubricPage(Page):
         # (don't add here for now)
         #rubric.pages.append(page_inst)
 
-        self.template = "default.html5"
-
         self.out_filename = "index.html"
         self.out_dir = os.path.join( self.site.config.PUBLISH_DIR,
-                                     self.title )
+                                     self.rubric.name )
 
-        self.header_title = self.title
+        self.header_title = self.rubric.name
 
 class NoRubricPage(Page):
 
     def __init__(self, content_file):
         super().__init__(content_file)
-        self.template = "default.html5"
 
-        # change to "url encoded" later
+        # evtl. change to "url encoded" later
         self.out_filename = os.path.splitext(content_file.name)[0] + '.html'
         self.out_dir = self.site.config.PUBLISH_DIR
 
         self.header_title = self.title
+
+class ContentPage(Page):
+
+    def __init__(self, content_file, rubric):
+        super().__init__(content_file)
+        self.rubric = rubric
+        self.rubric.pages.append(self)
+
+        self.out_filename = url_encode_filename(self.title) + '.html'
+        if not self.date_obj:
+            print("Warning: Erroneous date:", self.content_file.filepath_abs)
+            date_str = "ERRONEOUS_DATE"
+        else:
+            date_str = self.date_obj.strftime("%Y-%m-%d")
+        self.out_dir = os.path.join( self.site.config.PUBLISH_DIR,
+                                     date_str )
+
+        self.header_title = self.rubric.name
+
+def url_encode_filename(string):
+    # 1) convert spaces to dashes
+    dashed = re.sub(r'[\ ]', '-', string)
+    # 2) only accept [^a-zA-Z0-9-]
+    #    replace everything else by %
+    alnum_dashed = re.sub(r'[^a-zA-Z0-9-]', '-', dashed)
+    # 3) lowercase
+    return alnum_dashed.lower()

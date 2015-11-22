@@ -10,27 +10,32 @@
 # "rubrics" are categories, e.g. 'Drawings', 'Articles', 'Fotos'
 #
 #
-# page types
+# default page types
 #
-# - home          (home page, only one)
-# - rubric        (main rubrics page, one per rubric)
-# - <rubric name> (content page)
-# - norubric      (other, e.g. about page)
+# - home        (home page, only one)
+# - norubric    (other page in root directory, e.g. about) (default)
+# - rubricpage  (main rubrics page, one per rubric)
+#
+# additional page types
+#
+# - article     (article content page)
+# - image       (image content page) --> later split drawing and foto
 #
 #
 #  content                     public
 #
 #   home ------------------> index.html
 #
-#   norubric --------------> <title-url-compat>.html (e.g. about page)
+#   norubric --------------> <filename>.html
+#                            --> later use: <title-url-compat>.html
 #
-#   rubric ----------------> <rubric name>/index.html
+#   rubricpage ------------> <rubric name>/index.html
 #
-#   <content page> --------> <rubric name>/<date>/<title-url-compat>.html
+#   <add page type> -------> <rubric name>/<date>/<title-url-compat>.html
 #                                                /<content> (images etc.)
 #
-#                            rubric.html (list of rubrics, generated)
-#
+#                            menu-fallback.html (list of rubrics, generated)
+
 
 from Site import Site
 
@@ -51,19 +56,19 @@ def script():
     #           .pages
     #
 
-    for subpath in site.content.subpaths:
-        print(subpath.subpath)
+#    for subpath in site.content.subpaths:
+#        print(subpath.subpath)
 
-    for page in site.pages:
-        print(page.variables['title'])
+#    for page in site.pages:
+#        print(page.variables['title'])
 
         #for page in subpath.pages:
         #    print(page.title)
         #    print(page.date)
 
-    print(site.homepage.title)
+#    print(site.homepage.title)
 
-    for rubric in site.rubrics:
-        print(rubric.name)
+#    for rubric in site.rubrics:
+#        print(rubric.name)
 
 script()
