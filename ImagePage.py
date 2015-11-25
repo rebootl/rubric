@@ -46,11 +46,15 @@ class ImagePage(ContentPage):
     def make_thumb(self):
         filename = os.path.basename(self.in_path_abs)
         out_filename = os.path.splitext(filename)[0] + "_thumb.png"
-        self.out_filepath_abs = os.path.join( self.out_dir_abs,
+        self.out_thumbpath_abs = os.path.join( self.out_dir_abs,
                                               out_filename )
+
+        # leave if already there
+        if os.path.isfile(self.out_thumbpath_abs):
+            return
 
         image = Image.open(self.in_path_abs)
 
         thumb = ImageOps.fit(image, (256, 256), Image.ANTIALIAS)
 
-        thumb.save(self.out_filepath_abs, "PNG")
+        thumb.save(self.out_thumbpath_abs, "PNG")

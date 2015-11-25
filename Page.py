@@ -65,8 +65,8 @@ class Page:
     def preprocess(self):
         self.out_dir_abs = os.path.join( self.site.config.PUBLISH_DIR,
                                          self.out_dir )
-        self.out_filepath = os.path.join( self.out_dir_abs,
-                                          self.out_filename )
+        self.out_filepath_abs = os.path.join( self.out_dir_abs,
+                                              self.out_filename )
 
     def create_date_obj(self):
         try:
@@ -150,7 +150,7 @@ class Page:
         #out_filepath = os.path.join( self.site.config.PUBLISH_DIR,
         #                             self.out_dir,
         #                             self.out_filename )
-        write_out(self.page_html, self.out_filepath)
+        write_out(self.page_html, self.out_filepath_abs)
 
     def copy_files(self):
         for file in self.files:
