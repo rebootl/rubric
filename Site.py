@@ -21,6 +21,7 @@ class Config:
             'date': "Warning: No date set in content file." 
         }
 
+        self.IMAGEPAGE_STYLE_HREF = '/imagepage.css'
 
 class Site:
 

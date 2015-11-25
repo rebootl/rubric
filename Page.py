@@ -25,6 +25,7 @@ import os
 from datetime import datetime
 
 from common import pandoc_pipe, write_out, copy_file
+from plugin_handler import get_cdata, plugin_cdata_handler, back_substitute
 
 class Page:
 
@@ -59,6 +60,13 @@ class Page:
         # (sets self.date_obj)
 
         self.template = "default.html5"
+        self.add_stylesheets = []
+
+    def preprocess(self):
+        self.out_dir_abs = os.path.join( self.site.config.PUBLISH_DIR,
+                                         self.out_dir )
+        self.out_filepath = os.path.join( self.out_dir_abs,
+                                          self.out_filename )
 
     def create_date_obj(self):
         try:
@@ -68,21 +76,46 @@ class Page:
             self.date_obj = None
 
     def process(self):
-        # --> substitute and process plugin content
+        # substitute and process plugin content
+        self.process_plugin_content()
+        # sets:
+        # - self.body_md_subst
+        # - self.cdata_blocks
+        # - self.plugin_blocks
+        # - self.plugin_pandoc_opts
 
         # process through pandoc
         self.prepare_pandoc()
 
-        self.page_html = pandoc_pipe( self.body_md,
-                                      self.pandoc_opts )
+        self.page_html_subst = pandoc_pipe( self.body_md_subst,
+                                            self.pandoc_opts )
 
-        # --> back-substitute plugin content
+        # back-substitute plugin content
+        if self.plugin_blocks != []:
+            self.page_html = back_substitute( self.page_html_subst,
+                                              self.plugin_blocks )
+        else:
+            self.page_html = self.page_html_subst
 
         # write out
         self.write_out()
 
         # copy files
         self.copy_files()
+
+    def process_plugin_content(self):
+        # plugin substitution
+        self.body_md_subst, \
+        self.cdata_blocks = get_cdata(self.body_md)
+
+        # process the plug-in content
+        if self.cdata_blocks != []:
+            self.plugin_blocks, \
+            self.plugin_pandoc_opts = plugin_cdata_handler( self,
+                                                            self.cdata_blocks )
+        else:
+            self.plugin_blocks = []
+            self.plugin_pandoc_opts = []
 
     def prepare_pandoc(self):
 
@@ -107,9 +140,17 @@ class Page:
                                                    + ':'
                                                    + self.variables[key] )
 
+        # additional stylesheets
+        if 'stylesheet' in self.meta.keys():
+            self.add_stylesheets.append(self.meta['stylesheet'])
+        for add_stylesheet in self.add_stylesheets:
+            self.pandoc_opts.append('--variable=add-stylesheet:' + add_stylesheet)
+
     def write_out(self):
-        out_filepath = os.path.join(self.out_dir, self.out_filename)
-        write_out(self.page_html, out_filepath)
+        #out_filepath = os.path.join( self.site.config.PUBLISH_DIR,
+        #                             self.out_dir,
+        #                             self.out_filename )
+        write_out(self.page_html, self.out_filepath)
 
     def copy_files(self):
         for file in self.files:
@@ -119,19 +160,21 @@ class Page:
             if not os.path.isfile(in_path_abs):
                 print("Warning: File not found:", file)
                 continue
-            copy_file(in_path_abs, self.out_dir)
-
+            copy_file(in_path_abs, self.out_dir_abs)
 
 class HomePage(Page):
 
     def __init__(self, content_file):
         super().__init__(content_file)
+
         self.site.homepage = self
 
         self.out_filename = "index.html"
-        self.out_dir = self.site.config.PUBLISH_DIR
+        self.out_dir = ""
 
         self.header_title = ""
+
+        self.preprocess()
 
 class RubricPage(Page):
 
@@ -144,10 +187,11 @@ class RubricPage(Page):
         #rubric.pages.append(page_inst)
 
         self.out_filename = "index.html"
-        self.out_dir = os.path.join( self.site.config.PUBLISH_DIR,
-                                     self.rubric.name )
+        self.out_dir = self.rubric.name
 
         self.header_title = self.rubric.name
+
+        self.preprocess()
 
 class NoRubricPage(Page):
 
@@ -156,33 +200,13 @@ class NoRubricPage(Page):
 
         # evtl. change to "url encoded" later
         self.out_filename = os.path.splitext(content_file.name)[0] + '.html'
-        self.out_dir = self.site.config.PUBLISH_DIR
+        self.out_dir = ""
 
         self.header_title = self.title
 
-class ContentPage(Page):
+        self.preprocess()
 
-    def __init__(self, content_file, rubric):
-        super().__init__(content_file)
-        self.rubric = rubric
-        self.rubric.pages.append(self)
-
-        self.out_filename = url_encode_filename(self.title) + '.html'
-        if not self.date_obj:
-            print("Warning: Erroneous date:", self.content_file.filepath_abs)
-            date_str = "ERRONEOUS_DATE"
-        else:
-            date_str = self.date_obj.strftime("%Y-%m-%d")
-        self.out_dir = os.path.join( self.site.config.PUBLISH_DIR,
-                                     date_str )
-
-        self.header_title = self.rubric.name
-
-def url_encode_filename(string):
-    # 1) convert spaces to dashes
-    dashed = re.sub(r'[\ ]', '-', string)
-    # 2) only accept [^a-zA-Z0-9-]
-    #    replace everything else by %
-    alnum_dashed = re.sub(r'[^a-zA-Z0-9-]', '-', dashed)
-    # 3) lowercase
-    return alnum_dashed.lower()
+# derived objects in separate files
+#
+# - ContentPage
+# - ImagePage

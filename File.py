@@ -33,10 +33,9 @@ class ContentFile(File):
         else:
             self.type = self.meta['type']
 
-        #print(self.meta)
-        print("META: ")
-        for key, val in self.meta.items():
-            print(" ", key, ":", val)
+        #print("META: ")
+        #for key, val in self.meta.items():
+        #    print(" ", key, ":", val)
         if 'rubric' not in self.meta.keys():
             if self.type == 'home':
                 pass

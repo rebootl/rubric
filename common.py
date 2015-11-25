@@ -35,6 +35,10 @@ def copy_file(in_path, out_dir):
     '''Call copy w/o preset directories.
 (Not recursive.)
 --> shutil.copy could be used for this.'''
+    if not os.path.isfile(in_path):
+        print("Warning: File not found:", self.imagefile)
+        return
+
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
 

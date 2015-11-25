@@ -4,11 +4,14 @@ import os
 
 from File import ContentFile
 from Page import Page, HomePage, RubricPage, NoRubricPage
+from ContentPage import ContentPage
+from ImagePage import ImagePage
 from Rubric import Rubric
 
 class Subpath:
 
     def __init__(self, content, subpath=""):
+        print("SUBPATH", subpath)
         self.content = content
         self.content.subpaths.append(self)
         self.site = content.site
@@ -17,11 +20,9 @@ class Subpath:
         self.path_abs = os.path.join(self.site.config.CONTENT_DIR, subpath)
 
         self.content_files = []
+        self.subdirs = []
 
         self.load_content()
-
-        # recursion (deactivated for now)
-        self.subdirs = []
 
     def load_content(self):
 
@@ -35,13 +36,14 @@ class Subpath:
                 file = ContentFile(self, filename)
                 self.content_files.append(file)
 
-            elif os.path.isdir(filename):
+            elif os.path.isdir( os.path.join( self.path_abs, filename) ):
                 subdirs.append(filename)
 
         # create page instances
         for file in self.content_files:
             self.create_page_instance(file)
 
+        # recurse
         for subdir in subdirs:
             subpath_inst = Subpath(self.content, subdir)
             self.subdirs.append(subpath_inst)
@@ -59,11 +61,13 @@ class Subpath:
             rubric = self.new_rubric(file.rubric_name)
             page_inst = RubricPage(file, rubric)
 
+        elif type == "image":
+            rubric = self.new_rubric(file.rubric_name)
+            page_inst = ImagePage(file, rubric)
+
         else:
             rubric = self.new_rubric(file.rubric_name)
-
-            #page_inst = Page(file)
-            #rubric.pages.append(page_inst)
+            page_inst = ContentPage(file, rubric)
 
     def new_rubric(self, rubric_name):
         rubric = self.site.get_rubric_by_name(rubric_name)
