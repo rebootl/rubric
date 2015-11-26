@@ -3,6 +3,7 @@
 import re
 
 #from plugins.latest_articles.latest_articles import latest_articles
+from plugins.image_thumbs.image_thumbs import image_thumbs
 
 # Settings
 # --> Pandoc adds newlines into the div now...
@@ -28,8 +29,8 @@ def plugin_cdata_handler(page, cdata_blocks):
         # here now we forward the blocks to the appropriate plugins
         # Each plugin needs an entry here !
 
-        if plugin_name == 'IMAGETHUMBS':
-            plugin_out = imagethumbs(page)
+        if plugin_name == 'IMAGE_THUMBS':
+            plugin_out = image_thumbs(page)
 
         #elif plugin_name = 'PLUGIN_NAME':
         #	plugin_out, pandoc_opts = plugin_function(plugin_content

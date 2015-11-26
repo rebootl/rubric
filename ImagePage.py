@@ -8,10 +8,13 @@ from PIL import Image, ImageOps
 from ContentPage import ContentPage
 from common import copy_file
 
+IMG = '<img class="imagepage" alt="{}" title="{}" src="{}" />'
+
 class ImagePage(ContentPage):
 
     def __init__(self, content_file, rubric):
         super().__init__(content_file, rubric)
+        self.type = 'imagepage'
 
         self.imagefile = self.meta['image']
 
@@ -34,9 +37,9 @@ class ImagePage(ContentPage):
         img_alt = self.title
         img_title = self.title
         img_src = self.imagefile
-        image_body = '<img alt="{}" title="{}" src="{}" />'.format( img_alt,
-                                                                    img_title,
-                                                                    img_src )
+        image_body = IMG.format( img_alt,
+                                 img_title,
+                                 img_src )
         #self.body_md = image_body + self.body_md
         self.variables['imagepage-body'] = image_body
 
@@ -44,10 +47,12 @@ class ImagePage(ContentPage):
         copy_file(self.in_path_abs, self.out_dir_abs)
 
     def make_thumb(self):
-        filename = os.path.basename(self.in_path_abs)
-        out_filename = os.path.splitext(filename)[0] + "_thumb.png"
+        in_filename = os.path.basename(self.in_path_abs)
+        out_filename = os.path.splitext(in_filename)[0] + "_thumb.png"
+
+        self.thumb_src = os.path.join(self.out_dir, out_filename)
         self.out_thumbpath_abs = os.path.join( self.out_dir_abs,
-                                              out_filename )
+                                          out_filename )
 
         # leave if already there
         if os.path.isfile(self.out_thumbpath_abs):

@@ -12,6 +12,8 @@ class ContentPage(Page):
         self.rubric = rubric
         self.rubric.pages.append(self)
 
+        self.type = 'contentpage'
+
         self.out_filename = url_encode_filename(self.title) + '.html'
         if not self.date_obj:
             print("Warning: Erroneous date:", self.content_file.filepath_abs)

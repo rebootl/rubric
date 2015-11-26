@@ -63,6 +63,7 @@ class Page:
         self.add_stylesheets = []
 
     def preprocess(self):
+        self.href = os.path.join('/', self.out_dir, self.out_filename)
         self.out_dir_abs = os.path.join( self.site.config.PUBLISH_DIR,
                                          self.out_dir )
         self.out_filepath_abs = os.path.join( self.out_dir_abs,
@@ -197,6 +198,7 @@ class NoRubricPage(Page):
 
     def __init__(self, content_file):
         super().__init__(content_file)
+        self.type = 'norubric'
 
         # evtl. change to "url encoded" later
         self.out_filename = os.path.splitext(content_file.name)[0] + '.html'
