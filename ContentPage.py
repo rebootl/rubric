@@ -5,6 +5,8 @@ import re
 
 from Page import Page
 
+A = '<a title="{}" href="{}">{}</a>'
+
 class ContentPage(Page):
 
     def __init__(self, content_file, rubric):
@@ -23,7 +25,10 @@ class ContentPage(Page):
         self.out_dir = os.path.join( self.rubric.name,
                                      date_str )
 
-        self.header_title = self.rubric.name
+        rubric_href = os.path.join('/', self.rubric.name)
+        self.header_title = A.format( self.rubric.name,
+                                      rubric_href,
+                                      self.rubric.name )
 
         self.preprocess()
 

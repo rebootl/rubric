@@ -12,7 +12,7 @@ class Config:
         self.PAGE_EXT = PAGE_EXT
 
         # date format (acc. to Python datetime.datetime.strptime)
-        self.DATE_FORMAT = "%Y-%m-%d"
+        self.DATE_FORMAT = "%Y-%m-%d %H:%M"
 
         # default meta information
         self.DEFAULT_META_DICT = {
