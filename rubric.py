@@ -1,28 +1,35 @@
 #!/usr/bin/python
 '''rubric - an emphasis on content'''
 
-# want that cool shit, ey
-
-# an "inner" representation of the website shall be created
-# by page object instances
+#   want that cool shit, ey"
+#
+#   an "inner" representation of the website shall be created
+#   by page object instances
 #
 #
-# "rubrics" are categories, e.g. 'Drawings', 'Articles', 'Fotos'
+#   "rubrics" are categories, e.g. 'Drawings', 'Articles', 'Fotos'
 #
 #
-# default page types
+#
+# The entire website is simply created based on content files.
+# The structure of these files is not important, they could even
+# be distributed over several different directories. (currently only
+# one directory is implemented)
+#
+# The website structure is automatically created, therefor several
+# types of content files / pages are supported.
+#
+# Currently these are:
 #
 # - home        (home page, only one)
 # - norubric    (other page in root directory, e.g. about) (default)
 # - rubricpage  (main rubrics page, one per rubric)
 #
-# additional page types
-#
 # - article     (article content page)
 # - image       (image content page) --> later split drawing and foto
 #
 #
-#  content                     public
+#  content type              publish destination
 #
 #   home ------------------> index.html
 #
@@ -35,10 +42,31 @@
 #                                                /<content> (images etc.)
 #
 #                            menu-fallback.html (list of rubrics, generated)
-
+#
+# content files
+# -------------
+#
+# a content file contains:
+#
+# 1) meta information at the beginning, using json format
+#    e.g.:
+#    {
+#      "title":  "Welcome Home",
+#      "author": "Cem",
+#      "date":   "2015-11-16",
+#      "type":   "home",
+#      "files":  []
+#    }
+#    %%%
+#
+#    delimited by "%%%"
+#
+# 2) page content in markdown and/or plugin syntax (optional)
+#
+#
+# Usage:
 
 from Site import Site
-
 
 def script():
 

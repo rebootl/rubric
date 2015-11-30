@@ -3,6 +3,11 @@
 import os
 import json
 
+from Page import Page, ContentPage, HomePage, RubricPage, NoRubricPage
+#from ContentPage import ContentPage
+from ImagePage import ImagePage
+from Rubric import Rubric
+
 class File:
 
     def __init__(self, subpath, name):
@@ -22,7 +27,12 @@ class ContentFile(File):
 
         self.meta, self.body_md = self.read_content_file()
 
-        # set some more sane defaults
+        self.set_defaults()
+        self.create_page_instance()
+
+    def set_defaults(self):
+        '''set some sane defaults'''
+
         if 'files' not in self.meta.keys():
             self.files = []
         else:
@@ -33,9 +43,6 @@ class ContentFile(File):
         else:
             self.type = self.meta['type']
 
-        #print("META: ")
-        #for key, val in self.meta.items():
-        #    print(" ", key, ":", val)
         if 'rubric' not in self.meta.keys():
             if self.type == 'home':
                 pass
@@ -49,6 +56,34 @@ class ContentFile(File):
         else:
             self.rubric_name = self.meta['rubric']
 
+    def create_page_instance(self):
+        type = self.meta['type']
+
+        if type == "home":
+            page_inst = HomePage(self)
+
+        elif type == "norubric":
+            page_inst = NoRubricPage(self)
+
+        elif type == "rubricpage":
+            rubric = self.new_rubric()
+            page_inst = RubricPage(self, rubric)
+
+        elif type == "imagepage":
+            rubric = self.new_rubric()
+            page_inst = ImagePage(self, rubric)
+
+        else:
+            rubric = self.new_rubric()
+            page_inst = ContentPage(self, rubric)
+
+    def new_rubric(self):
+        rubric = self.site.get_rubric_by_name(self.rubric_name)
+        if not rubric:
+            rubric = Rubric(self.site, self.rubric_name)
+
+        return rubric
+
     def read_content_file(self):
         with open(self.filepath_abs, 'r') as f:
             content = f.read()
@@ -56,10 +91,5 @@ class ContentFile(File):
         meta_json, body_md = content.split('%%%', 1)
 
         meta = json.loads(meta_json)
-
-        # set sane defaults
-        for key in self.site.config.DEFAULT_META_DICT:
-            if key not in meta:
-                meta[key] = self.site.config.DEFAULT_META_DICT[key]
 
         return meta, body_md

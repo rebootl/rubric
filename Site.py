@@ -1,40 +1,50 @@
-'''main site objects'''
+'''main objects'''
+
+from jinja2 import Environment, FileSystemLoader
 
 from Subpath import Subpath
 from Menu import RubricList
 
 class Config:
 
-    def __init__(self, CONTENT_DIR, PUBLISH_DIR, TEMPLATE_DIR, PAGE_EXT):
+    def __init__(self, CONTENT_DIR, PUBLISH_DIR, TEMPLATE_DIR,
+                    TEMPLATE_NAME, PAGE_EXT):
+
         self.CONTENT_DIR = CONTENT_DIR
         self.PUBLISH_DIR = PUBLISH_DIR
         self.TEMPLATE_DIR = TEMPLATE_DIR
+        self.TEMPLATE_NAME = TEMPLATE_NAME
         self.PAGE_EXT = PAGE_EXT
 
         # date format (acc. to Python datetime.datetime.strptime)
         self.DATE_FORMAT = "%Y-%m-%d %H:%M"
 
-        # default meta information
-        self.DEFAULT_META_DICT = {
-            'title': "Warning: No title set in content file.",
-            'author': "Warning: No author set in content file.",
-            'date': "Warning: No date set in content file." 
+        self.FALLBACK_META_VARIABLES = {
+            'title': "NO TITLE SET",
+            'author': "NO AUTHOR SET",
+            'date': "NO DATE SET"
         }
-
-        self.IMAGEPAGE_STYLE_HREF = '/imagepage.css'
 
 class Site:
 
-    def __init__(self, CONTENT_DIR, PUBLISH_DIR, TEMPLATE_DIR,
-                  PAGE_EXT=".page" ):
+    def __init__( self, CONTENT_DIR, PUBLISH_DIR, TEMPLATE_DIR,
+                  TEMPLATE_NAME = "default.html5",
+                  PAGE_EXT = ".page" ):
 
         self.config = Config( CONTENT_DIR,
                               PUBLISH_DIR,
                               TEMPLATE_DIR,
+                              TEMPLATE_NAME,
                               PAGE_EXT )
 
+        # all rubrics, will be filled by Rubric instances,
+        # wich are in turn generated as needed
         self.rubrics = []
+        # all pages, will be filled by Page instances
         self.pages = []
+
+        # load jinja2 template
+        self.load_template()
 
         # load content
         self.content = Content(self)
@@ -45,6 +55,11 @@ class Site:
         # process pages
         for page in self.pages:
             page.process()
+
+    def load_template(self):
+        env = Environment(loader=FileSystemLoader(self.config.TEMPLATE_DIR))
+
+        self.template = env.get_template(self.config.TEMPLATE_NAME)
 
     def get_rubric_by_name(self, rubric_name):
         for rubric in self.rubrics:
