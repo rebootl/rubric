@@ -24,9 +24,20 @@ class ImagePage(ContentPage):
                                              self.content_file.subpath.subpath,
                                              self.imagefile )
 
-        self.add_image_body()
-        self.copy_image()
         self.make_thumb()
+
+    def process(self):
+        self.add_image_body()
+
+        # add menu
+        self.variables['rubric_list'] = self.site.rubric_list.menu
+
+        self.render()
+        self.write_out()
+
+        # copy files
+        self.copy_image()
+        self.copy_files()
 
     def add_image_body(self):
         title = self.content_file.meta['title']
