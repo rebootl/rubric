@@ -5,7 +5,7 @@
 import os
 from PIL import Image, ImageOps
 
-from Page import ContentPage
+from Pages.ContentPage import ContentPage
 from common import copy_file
 import tags
 

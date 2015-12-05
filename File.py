@@ -3,11 +3,13 @@
 import os
 import json
 
-from Page import Page, ContentPage, HomePage, RubricPage, NoRubricPage, \
-    ArticlePage
-#from ContentPage import ContentPage
-from ImagePage import ImagePage
 from Rubric import Rubric
+from Pages.ContentPage import ContentPage
+from Pages.HomePage import HomePage
+from Pages.RubricPage import RubricPage
+from Pages.NoRubricPage import NoRubricPage
+from Pages.ArticlePage import ArticlePage
+from Pages.ImagePage import ImagePage
 
 class File:
 
