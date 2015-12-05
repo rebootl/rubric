@@ -16,8 +16,11 @@ class Config:
         self.TEMPLATE_NAME = TEMPLATE_NAME
         self.PAGE_EXT = PAGE_EXT
 
-        # date format (acc. to Python datetime.datetime.strptime)
-        self.DATE_FORMAT = "%Y-%m-%d %H:%M"
+        # date format for content files,
+        # format acc. to Python datetime.datetime.strptime,
+        # one of these can be used
+        self.DATE_FORMAT = "%Y-%m-%d"
+        self.DATETIME_FORMAT = "%Y-%m-%d %H:%M"
 
         self.FALLBACK_META_VARIABLES = {
             'title': "NO TITLE SET",
@@ -28,7 +31,7 @@ class Config:
 class Site:
 
     def __init__( self, CONTENT_DIR, PUBLISH_DIR, TEMPLATE_DIR,
-                  TEMPLATE_NAME = "default.html5",
+                  TEMPLATE_NAME = "html5.html",
                   PAGE_EXT = ".page" ):
 
         self.config = Config( CONTENT_DIR,
@@ -48,6 +51,11 @@ class Site:
 
         # load content
         self.content = Content(self)
+
+        # --> sort stuff
+        # ..
+        for rubric in self.rubrics:
+            rubric.sort()
 
         # generate rubric list
         self.rubric_list = RubricList(self)

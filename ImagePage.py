@@ -23,7 +23,6 @@ class ImagePage(ContentPage):
         self.img_in_path_abs = os.path.join( self.site.config.CONTENT_DIR,
                                              self.content_file.subpath.subpath,
                                              self.imagefile )
-
         self.make_thumb()
 
     def process(self):
@@ -64,6 +63,9 @@ class ImagePage(ContentPage):
         # leave if already there
         if os.path.isfile(self.out_thumbpath_abs):
             return
+
+        if not os.path.isdir(self.out_dir_abs):
+            os.makedirs(self.out_dir_abs)
 
         image = Image.open(self.img_in_path_abs)
 

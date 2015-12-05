@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import re
 
 
 def pandoc_pipe(content, opts):
@@ -46,3 +47,13 @@ def copy_file(in_path, out_dir):
     cp_command = ['cp', '-u', in_path, out_dir]
 
     exitcode = subprocess.call(cp_command)
+
+
+def url_encode_str(string):
+    # 1) convert spaces to dashes
+    dashed = re.sub(r'[\ ]', '-', string)
+    # 2) only accept [^a-zA-Z0-9-]
+    #    replace everything else by %
+    alnum_dashed = re.sub(r'[^a-zA-Z0-9-]', '-', dashed)
+    # 3) lowercase
+    return alnum_dashed.lower()

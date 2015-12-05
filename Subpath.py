@@ -37,5 +37,5 @@ class Subpath:
 
         # recurse
         for subdir in subdirs:
-            subpath_inst = Subpath(self.content, subdir)
+            subpath_inst = Subpath(self.content, os.path.join(self.subpath, subdir))
             self.subdirs.append(subpath_inst)

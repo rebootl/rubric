@@ -15,8 +15,11 @@ def image_thumbs(page):
             imagepages.append(page)
 
     # sort after title, date
-    imagepages.sort(key=lambda k: k.title)
-    imagepages.sort(key=lambda k: k.date_obj.timestamp())
+    # --> sorting is done in rubric obj. now
+#    imagepages.sort(key=lambda k: k.title)
+#    imagepages.sort(key=lambda k: k.date_obj.timestamp())
+#    imagepages.reverse()
+
     imagepages.reverse()
 
     html = '<div id="thumbs-box">\n'

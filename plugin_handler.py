@@ -4,6 +4,7 @@ import re
 
 #from plugins.latest_articles.latest_articles import latest_articles
 from plugins.image_thumbs.image_thumbs import image_thumbs
+from plugins.articles.articles import articles
 
 # Settings
 # --> Pandoc adds newlines into the div now...
@@ -31,6 +32,9 @@ def plugin_cdata_handler(page, cdata_blocks):
 
         if plugin_name == 'IMAGE_THUMBS':
             plugin_out = image_thumbs(page)
+
+        elif plugin_name == 'ARTICLES':
+            plugin_out = articles(page)
 
         #elif plugin_name = 'PLUGIN_NAME':
         #	plugin_out, pandoc_opts = plugin_function(plugin_content

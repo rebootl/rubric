@@ -3,7 +3,8 @@
 import os
 import json
 
-from Page import Page, ContentPage, HomePage, RubricPage, NoRubricPage
+from Page import Page, ContentPage, HomePage, RubricPage, NoRubricPage, \
+    ArticlePage
 #from ContentPage import ContentPage
 from ImagePage import ImagePage
 from Rubric import Rubric
@@ -72,6 +73,10 @@ class ContentFile(File):
         elif type == "imagepage":
             rubric = self.new_rubric()
             page_inst = ImagePage(self, rubric)
+
+        elif type == "article":
+            rubric = self.new_rubric()
+            page_inst = ArticlePage(self, rubric)
 
         else:
             rubric = self.new_rubric()
