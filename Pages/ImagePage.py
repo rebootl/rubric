@@ -56,7 +56,7 @@ class ImagePage(ContentPage):
         in_filename = os.path.basename(self.img_in_path_abs)
         out_filename = os.path.splitext(in_filename)[0] + "_thumb.png"
 
-        self.thumb_src = os.path.join(self.out_subdir, out_filename)
+        self.thumb_src = os.path.join('/', self.out_subdir, out_filename)
         self.out_thumbpath_abs = os.path.join( self.out_dir_abs,
                                           out_filename )
 

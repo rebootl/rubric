@@ -24,6 +24,7 @@ class ContentPage(ContentFilePage):
                           out_filename = out_filename )
 
         self.rubric.pages.append(self)
+        self.site.content_pages.append(self)
 
         self.variables['header_title'] = self.rubric.name
 
@@ -52,22 +53,23 @@ class ContentPage(ContentFilePage):
         self.set_page_nav()
 
     def next_page(self):
-        for num, page in enumerate(self.rubric.pages):
+        for num, page in enumerate(self.site.content_pages):
             if page == self:
                 next_page_num = num + 1
-                if next_page_num + 1 > len(self.rubric.pages):
+                if next_page_num + 1 > len(self.site.content_pages):
                     self.next_page = None
                 else:
-                    self.next_page = self.rubric.pages[num+1]
+                    self.next_page = self.site.content_pages[num+1]
+                    # (debug prints)
                     print("SELF", self.content_file.meta['title'])
                     print("NEXT", self.next_page.content_file.meta['title'])
 
     def prev_page(self):
-        for num, page in enumerate(self.rubric.pages):
+        for num, page in enumerate(self.site.content_pages):
             if page == self:
                 prev_page_num = num - 1
                 if not prev_page_num < 0:
-                    self.prev_page = self.rubric.pages[num-1]
+                    self.prev_page = self.site.content_pages[num-1]
                     print("PREV", self.prev_page.content_file.meta['title'])
                 else:
                     self.prev_page = None
@@ -75,7 +77,7 @@ class ContentPage(ContentFilePage):
     def set_page_nav(self):
         self.variables['page_nav'] = True
 
-        self.variables['index_href'] = os.path.join('/', self.rubric.name)
+        #self.variables['index_href'] = os.path.join('/', self.rubric.name)
 
         if self.prev_page:
             self.variables['prev_href'] = self.prev_page.href

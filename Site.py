@@ -4,6 +4,8 @@ from jinja2 import Environment, FileSystemLoader
 
 from Subpath import Subpath
 from Menu import RubricList
+from Pages.ListingPage import ListingByDatePage
+from common import sort_pages
 
 class Config:
 
@@ -45,6 +47,7 @@ class Site:
         self.rubrics = []
         # all pages, will be filled by Page instances
         self.pages = []
+        self.content_pages = []
 
         # load jinja2 template
         self.load_template()
@@ -54,11 +57,15 @@ class Site:
 
         # --> sort stuff
         # ..
+        self.content_pages = sort_pages(self.content_pages)
         for rubric in self.rubrics:
             rubric.sort()
 
         # generate rubric list
         self.rubric_list = RubricList(self)
+
+        # generate listing page
+        listing_inst = ListingByDatePage(self)
 
         # process pages
         for page in self.pages:

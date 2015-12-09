@@ -57,3 +57,17 @@ def url_encode_str(string):
     alnum_dashed = re.sub(r'[^a-zA-Z0-9-]', '-', dashed)
     # 3) lowercase
     return alnum_dashed.lower()
+
+
+def sort_pages(pages):
+    try:
+        pages.sort(key=lambda k: k.title)
+    except AttributeError:
+        print("Warning: Bad title, can't properly sort...")
+        pass
+    try:
+        pages.sort(key=lambda k: k.date_obj.timestamp())
+    except AttributeError:
+        print("Warning: Bad date, can't properly sort...")
+        pass
+    return pages
