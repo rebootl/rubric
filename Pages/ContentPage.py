@@ -15,13 +15,13 @@ class ContentPage(ContentFilePage):
 
         self.create_date_obj()
 
-        out_filename = url_encode_str( self.content_file.meta['title'] ) \
-                        + '.html'
-        out_subdir = os.path.join( self.rubric.name, self.date_str )
+        # (comment out later, it should be the default)
+        #out_filename = "index.html"
+        page_subdir = url_encode_str(self.content_file.meta['title'])
+        out_subdir = os.path.join(self.date_str, page_subdir)
 
         super().__init__( self.content_file,
-                          out_subdir = out_subdir,
-                          out_filename = out_filename )
+                          out_subdir = out_subdir )
 
         self.rubric.pages.append(self)
         self.site.content_pages.append(self)
