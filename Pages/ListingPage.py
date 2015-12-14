@@ -7,10 +7,12 @@ from Rubric import sort_pages
 
 class ListingPage(Page):
 
-    def __init__(self, site, out_filename="listing.html"):
-        super().__init__(site, out_filename)
+    def __init__( self, site, out_subdir="",
+                  out_filename="listing.html" ):
+        super().__init__(site, out_subdir, out_filename)
 
     def process(self):
+        self.set_page_nav()
         self.gen_listing_variables()
         self.render()
         self.write_out()
@@ -26,17 +28,15 @@ class ListingPage(Page):
 class ListingByDatePage(ListingPage):
 
     def __init__(self, site):
-        super().__init__(site, out_filename="indexbydate.html")
+        super().__init__( site, "",
+                          "indexbydate.html" )
 
         self.variables['title'] = "Index"
-        self.variables['header_title'] = "Index"
+        #self.variables['header_title'] = "Index"
 
     def gen_listing_variables(self):
         # get all content pages
-        content_pages_unsorted = []
-        for rubric in self.site.rubrics:
-            for page in rubric.pages:
-                content_pages_unsorted.append(page)
+        content_pages_unsorted = self.site.content_pages.copy()
 
         # drop pages that have bad date
         for page in content_pages_unsorted:

@@ -11,8 +11,8 @@ import tags
 
 class ImagePage(ContentPage):
 
-    def __init__(self, content_file, rubric):
-        super().__init__(content_file, rubric)
+    def __init__(self, content_file):
+        super().__init__(content_file)
         self.type = 'imagepage'
 
         if not self.content_file.meta['image']:
@@ -26,10 +26,15 @@ class ImagePage(ContentPage):
         self.make_thumb()
 
     def process(self):
+        # sorting and page navigation (prev / index / next)
+        self.set_next_page()
+        self.set_prev_page()
+        self.set_page_nav()
+
         self.add_image_body()
 
         # add menu
-        self.variables['rubric_list'] = self.site.rubric_list.menu
+        #self.variables['rubric_list'] = self.site.rubric_list.menu
 
         self.render()
         self.write_out()
@@ -39,6 +44,7 @@ class ImagePage(ContentPage):
         self.copy_files()
 
     def add_image_body(self):
+        '''adding image body'''
         title = self.content_file.meta['title']
         img_alt = title
         img_title = title

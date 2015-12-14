@@ -9,9 +9,9 @@ from common import url_encode_str
 class ContentPage(ContentFilePage):
     '''Content pages, e.g. an article, an image page aso..'''
 
-    def __init__(self, content_file, rubric):
+    def __init__(self, content_file):
         self.content_file = content_file
-        self.rubric = rubric
+        #self.rubric = rubric
 
         self.create_date_obj()
 
@@ -23,10 +23,27 @@ class ContentPage(ContentFilePage):
         super().__init__( self.content_file,
                           out_subdir = out_subdir )
 
-        self.rubric.pages.append(self)
+        #self.rubric.pages.append(self)
         self.site.content_pages.append(self)
 
-        self.variables['header_title'] = self.rubric.name
+        #self.variables['header_title'] = self.rubric.name
+
+    def process(self):
+        # sorting and page navigation (prev / index / next)
+        self.set_next_page()
+        self.set_prev_page()
+        self.set_page_nav()        
+
+        self.process_body()
+
+        # add menu
+        #self.variables['rubric_list'] = self.site.rubric_list.menu
+
+        self.render()
+        self.write_out()
+
+        # copy files
+        self.copy_files()
 
     def create_date_obj(self):
         try:
@@ -47,12 +64,7 @@ class ContentPage(ContentFilePage):
                 self.date_obj = None
                 self.date_str = "ERRONEOUS_DATE"
 
-    def sort(self):
-        self.next_page()
-        self.prev_page()
-        self.set_page_nav()
-
-    def next_page(self):
+    def set_next_page(self):
         for num, page in enumerate(self.site.content_pages):
             if page == self:
                 next_page_num = num + 1
@@ -64,7 +76,7 @@ class ContentPage(ContentFilePage):
                     print("SELF", self.content_file.meta['title'])
                     print("NEXT", self.next_page.content_file.meta['title'])
 
-    def prev_page(self):
+    def set_prev_page(self):
         for num, page in enumerate(self.site.content_pages):
             if page == self:
                 prev_page_num = num - 1
@@ -74,20 +86,3 @@ class ContentPage(ContentFilePage):
                 else:
                     self.prev_page = None
 
-    def set_page_nav(self):
-        self.variables['page_nav'] = True
-
-        #self.variables['index_href'] = os.path.join('/', self.rubric.name)
-
-        if self.prev_page:
-            self.variables['prev_href'] = self.prev_page.href
-            #self.variables['prev_inactive_class'] = ""
-        else:
-            self.variables['prev_href'] = self.href
-            self.variables['prev_inactive_class'] = "inactive"
-
-        if self.next_page:
-            self.variables['next_href'] = self.next_page.href
-        else:
-            self.variables['next_href'] = self.href
-            self.variables['next_inactive_class'] = "inactive"

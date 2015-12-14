@@ -17,4 +17,5 @@ class NoRubricPage(ContentFilePage):
 
         self.type = 'norubricpage'
 
-        self.variables['header_title'] = self.variables['title']
+        #self.variables['header_title'] = self.variables['title']
+        self.variables['article_title'] = True

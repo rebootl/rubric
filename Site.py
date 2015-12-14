@@ -3,7 +3,7 @@
 from jinja2 import Environment, FileSystemLoader
 
 from Subpath import Subpath
-from Menu import RubricList
+#from Menu import RubricList
 from Pages.ListingPage import ListingByDatePage
 from common import sort_pages
 
@@ -44,7 +44,7 @@ class Site:
 
         # all rubrics, will be filled by Rubric instances,
         # wich are in turn generated as needed
-        self.rubrics = []
+        #self.rubrics = []
         # all pages, will be filled by Page instances
         self.pages = []
         self.content_pages = []
@@ -58,11 +58,11 @@ class Site:
         # --> sort stuff
         # ..
         self.content_pages = sort_pages(self.content_pages)
-        for rubric in self.rubrics:
-            rubric.sort()
+        #for rubric in self.rubrics:
+        #    rubric.sort()
 
         # generate rubric list
-        self.rubric_list = RubricList(self)
+        #self.rubric_list = RubricList(self)
 
         # generate listing page
         listing_inst = ListingByDatePage(self)
@@ -76,11 +76,11 @@ class Site:
 
         self.template = env.get_template(self.config.TEMPLATE_NAME)
 
-    def get_rubric_by_name(self, rubric_name):
-        for rubric in self.rubrics:
-            if rubric_name == rubric.name:
-                return rubric
-        return None
+    #def get_rubric_by_name(self, rubric_name):
+    #    for rubric in self.rubrics:
+    #        if rubric_name == rubric.name:
+    #            return rubric
+    #    return None
 
 
 class Content:

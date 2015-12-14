@@ -31,10 +31,11 @@ class ContentFilePage(Page):
         # ...
 
     def process(self):
+        self.set_page_nav()
         self.process_body()
 
         # add menu
-        self.variables['rubric_list'] = self.site.rubric_list.menu
+        #self.variables['rubric_list'] = self.site.rubric_list.menu
 
         self.render()
         self.write_out()
