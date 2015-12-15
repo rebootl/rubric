@@ -16,14 +16,14 @@
 # be distributed over several different directories. (currently only
 # one directory is implemented)
 #
-# The website structure is automatically created, therefor several
+# The website structure is automagically created, therefor several
 # types of content files / pages are supported.
 #
 # Currently these are:
 #
 # - home        (home page, only one)
 # - norubric    (other page in root directory, e.g. about) (default)
-# - rubricpage  (main rubrics page, one per rubric)
+# DEPRECATED - rubricpage  (main rubrics page, one per rubric)
 #
 # - article     (article content page)
 # - image       (image content page) --> later split drawing and foto
@@ -36,14 +36,15 @@
 #   norubric --------------> <filename>.html
 #                            --> later use: <title-url-compat>.html
 #
-#   rubricpage ------------> <rubric name>/index.html
+#   DEPRECATED rubricpage ------------> <rubric name>/index.html
 #
-#   <add page type> -------> <rubric name>/<date>/<title-url-compat>.html
-#                                                /<content> (images etc.)
+#   <add page type> -------> /<date>/<title-url-compat>/index.html
+#                                                      /<stuff> (images etc.)
 #
-#                            menu-fallback.html (list of rubrics, generated)
+#   DEPRECATED               menu-fallback.html (list of rubrics, generated)
 #
-# content files
+#
+# Content files
 # -------------
 #
 # a content file contains:
@@ -67,36 +68,30 @@
 # Usage:
 
 from Site import Site
+from Pages.ListingPage import ListingByDatePage
+from Pages.HomePage import LatestHomePage
 
 def script():
 
+    # generate site instance
+    # (this already loads content from the content directory
+    # set in config.CONTENT_DIR)
     site = Site( CONTENT_DIR = "/home/cem/website_rubric/content/",
                  PUBLISH_DIR = "/home/cem/website_rubric/public/",
                  TEMPLATE_DIR = "/home/cem/website_rubric/templates/" )
-    # this already loads content from the content directory
-    # set in config.CONTENT_DIR
-    #
-    # Objects   Instance Lists
-    #
-    #  Site     .subpaths
-    #           .homepage
-    #  Subpath  .content_files
-    #           .pages
-    #
 
-#    for subpath in site.content.subpaths:
-#        print(subpath.subpath)
+    # generate listing page
+    listing_inst = ListingByDatePage(site)
 
-#    for page in site.pages:
-#        print(page.variables['title'])
+    # process pages
+    for page in site.pages:
+        page.process()
 
-        #for page in subpath.pages:
-        #    print(page.title)
-        #    print(page.date)
+    # generate homepage,
+    # LatestHomePage has to be called _after_ processing of the pages
+    # (because it makes use of processed stuff) --> improve if possible
+    homepage_inst = LatestHomePage(site)
+    homepage_inst.process()
 
-#    print(site.homepage.title)
-
-#    for rubric in site.rubrics:
-#        print(rubric.name)
 
 script()

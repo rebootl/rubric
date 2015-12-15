@@ -65,11 +65,11 @@ class Site:
         #self.rubric_list = RubricList(self)
 
         # generate listing page
-        listing_inst = ListingByDatePage(self)
+        #listing_inst = ListingByDatePage(self)
 
         # process pages
-        for page in self.pages:
-            page.process()
+        #for page in self.pages:
+        #    page.process()
 
     def load_template(self):
         env = Environment(loader=FileSystemLoader(self.config.TEMPLATE_DIR))
