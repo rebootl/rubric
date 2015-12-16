@@ -3,7 +3,7 @@
 import os
 
 from Pages.Page import Page
-from Rubric import sort_pages
+from common import sort_pages
 
 class ListingPage(Page):
 

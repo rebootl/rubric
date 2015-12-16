@@ -1,11 +1,11 @@
-'''no rubric page object'''
+'''special page object'''
 
 import os
 
 from Pages.ContentFilePage import ContentFilePage
 
-class NoRubricPage(ContentFilePage):
-    '''Other pages not associated with a rubrig, e.g. About, Links etc..'''
+class SpecialPage(ContentFilePage):
+    '''top level pages beside homepage, e.g. about, links etc..'''
 
     def __init__(self, content_file):
         self.content_file = content_file
@@ -15,7 +15,7 @@ class NoRubricPage(ContentFilePage):
         super().__init__( self.content_file,
                           out_filename = out_filename )
 
-        self.type = 'norubricpage'
+        self.type = 'specialpage'
 
         #self.variables['header_title'] = self.variables['title']
         self.variables['article_title'] = True

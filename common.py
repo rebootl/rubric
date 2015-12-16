@@ -50,6 +50,7 @@ def copy_file(in_path, out_dir):
 
 
 def url_encode_str(string):
+    '''convert a string to be usable in a url'''
     # 1) convert spaces to dashes
     dashed = re.sub(r'[\ ]', '-', string)
     # 2) only accept [^a-zA-Z0-9-]
@@ -60,6 +61,7 @@ def url_encode_str(string):
 
 
 def sort_pages(pages):
+    '''sort pages after their attributes title and date_obj'''
     try:
         pages.sort(key=lambda k: k.title)
     except AttributeError:

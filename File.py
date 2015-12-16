@@ -3,11 +3,9 @@
 import os
 import json
 
-#from Rubric import Rubric
 from Pages.ContentPage import ContentPage
 from Pages.HomePage import HomePage
-from Pages.RubricPage import RubricPage
-from Pages.NoRubricPage import NoRubricPage
+from Pages.SpecialPage import SpecialPage
 from Pages.ArticlePage import ArticlePage
 from Pages.ImagePage import ImagePage
 
@@ -21,7 +19,7 @@ class File:
         self.filepath_abs = os.path.join( subpath.site.config.CONTENT_DIR,
                                           subpath.subpath,
                                           name )
-        print("File: ", self.filepath_abs)
+        print("FILE ", self.filepath_abs)
 
 class ContentFile(File):
 
@@ -42,22 +40,9 @@ class ContentFile(File):
             self.files = self.meta['files']
 
         if 'type' not in self.meta.keys():
-            self.type = 'norubric'
+            self.type = 'special'
         else:
             self.type = self.meta['type']
-
-        #if 'rubric' not in self.meta.keys():
-        #    if self.type == 'home':
-        #        pass
-        #    elif self.type == 'norubric':
-        #        pass
-        #    else:
-        #        quit( "Error: {} type needs a rubric in header: {}".format(
-        #            self.type,
-        #            self.filepath_abs
-        #        ) )
-        #else:
-        #    self.rubric_name = self.meta['rubric']
 
     def create_page_instance(self):
         type = self.meta['type']
@@ -65,31 +50,17 @@ class ContentFile(File):
         if type == "home":
             page_inst = HomePage(self)
 
-        elif type == "norubric":
-            page_inst = NoRubricPage(self)
-
-        #elif type == "rubricpage":
-        #    rubric = self.new_rubric()
-        #    page_inst = RubricPage(self, rubric)
+        elif type == "special":
+            page_inst = SpecialPage(self)
 
         elif type == "imagepage":
-        #    rubric = self.new_rubric()
             page_inst = ImagePage(self)
 
         elif type == "article":
-        #    rubric = self.new_rubric()
             page_inst = ArticlePage(self)
 
         else:
-        #    rubric = self.new_rubric()
             page_inst = ContentPage(self)
-
-#    def new_rubric(self):
-#        rubric = self.site.get_rubric_by_name(self.rubric_name)
-#        if not rubric:
-#            rubric = Rubric(self.site, self.rubric_name)
-#
-#        return rubric
 
     def read_content_file(self):
         with open(self.filepath_abs, 'r') as f:
