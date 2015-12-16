@@ -26,31 +26,18 @@ class ContentFilePage(Page):
         self.title = self.variables['title']
         self.author = self.variables['author']
 
-        # some stuff
-
-        # ...
-
     def process(self):
         self.set_page_nav()
         self.process_body()
 
-        # add menu
-        #self.variables['rubric_list'] = self.site.rubric_list.menu
-
         self.render()
-        self.write_out()
 
-        # copy files
+        self.write_out()
         self.copy_files()
 
     def process_body(self):
         # substitute and process plugin content
         self.process_plugin_content()
-        # sets:
-        # - self.body_md_subst
-        # - self.cdata_blocks
-        # - self.plugin_blocks
-        # - self.plugin_pandoc_opts
 
         # process through pandoc
         pandoc_opts = [ '--to=html5' ]

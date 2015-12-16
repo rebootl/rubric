@@ -26,15 +26,12 @@ class ImagePage(ContentPage):
         self.make_thumb()
 
     def process(self):
-        # sorting and page navigation (prev / index / next)
+        # sorting and page navigation (prev, next, index)
         self.set_next_page()
         self.set_prev_page()
         self.set_page_nav()
 
         self.add_image_body()
-
-        # add menu
-        #self.variables['rubric_list'] = self.site.rubric_list.menu
 
         self.render()
         self.write_out()

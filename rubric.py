@@ -7,8 +7,8 @@
 #   by page object instances
 #
 #
-#   "rubrics" are categories, e.g. 'Drawings', 'Articles', 'Fotos'
-#
+#   "rubrics" are categories, e.g. 'Drawings', 'Articles', 'Fotos',
+#   however they're not used anymore
 #
 #
 # The entire website is simply created based on content files.
@@ -21,9 +21,8 @@
 #
 # Currently these are:
 #
-# - home        (home page, only one)
-# - norubric    (other page in root directory, e.g. about) (default)
-# DEPRECATED - rubricpage  (main rubrics page, one per rubric)
+# - home        homepage (index.html), only one
+# - special     other top level pages beside homepage, e.g. about) (default)
 #
 # - article     (article content page)
 # - image       (image content page) --> later split drawing and foto
@@ -33,15 +32,11 @@
 #
 #   home ------------------> index.html
 #
-#   norubric --------------> <filename>.html
-#                            --> later use: <title-url-compat>.html
-#
-#   DEPRECATED rubricpage ------------> <rubric name>/index.html
+#   special --------------> <filename>.html
+#                            --> evtl. later use: <title-url-compat>.html
 #
 #   <add page type> -------> /<date>/<title-url-compat>/index.html
 #                                                      /<stuff> (images etc.)
-#
-#   DEPRECATED               menu-fallback.html (list of rubrics, generated)
 #
 #
 # Content files

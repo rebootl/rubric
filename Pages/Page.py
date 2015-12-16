@@ -37,7 +37,7 @@ class Page:
 
     def process(self):
         '''Override this in the respective subclasses.'''
-        # Usually something like:
+        # usually something like:
         # self.process() # (process page body)
         # self.set_page_nav()
         # self.render()

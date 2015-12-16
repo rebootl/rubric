@@ -16,6 +16,4 @@ class SpecialPage(ContentFilePage):
                           out_filename = out_filename )
 
         self.type = 'specialpage'
-
-        #self.variables['header_title'] = self.variables['title']
         self.variables['article_title'] = True

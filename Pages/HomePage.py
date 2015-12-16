@@ -20,11 +20,11 @@ class LatestHomePage(Page):
 
         self.latest_page = self.site.content_pages[-1]
 
-        #latest_page.process()
         self.page_html = self.latest_page.page_html
 
         self.write_out()
         self.copy_latest_page_files()
+        self.remove_previous_page_files()
 
     def copy_latest_page_files(self):
         for file in self.latest_page.content_file.files:
@@ -35,3 +35,13 @@ class LatestHomePage(Page):
                 print("Warning: File not found:", file)
                 continue
             copy_file(in_path_abs, self.out_dir_abs)
+
+    def remove_previous_page_files(self):
+        previous_page = self.site.content_pages[-2]
+
+        for file in previous_page.content_file.files:
+            filepath_abs = os.path.join( self.out_dir_abs,
+                                         file )
+            if os.path.isfile(filepath_abs):
+                print("Removing previous file:", filepath_abs)
+                #os.remove(filepath_abs)
