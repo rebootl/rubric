@@ -2,9 +2,7 @@
 
 import re
 
-#from plugins.latest_articles.latest_articles import latest_articles
-from plugins.image_thumbs.image_thumbs import image_thumbs
-from plugins.articles.articles import articles
+#from plugins.plugin_subdir.plugin_filename import plugin_function
 
 # Settings
 # --> Pandoc adds newlines into the div now...
@@ -20,6 +18,7 @@ def plugin_cdata_handler(page, cdata_blocks):
     plugin_pandoc_opts = []
 
     for block in cdata_blocks:
+        plugin_out = ""
         pandoc_opts = []
         # extract plugin name and content from cdata block
         block_split = block.split(']')
@@ -30,19 +29,16 @@ def plugin_cdata_handler(page, cdata_blocks):
         # here now we forward the blocks to the appropriate plugins
         # Each plugin needs an entry here !
 
-        if plugin_name == 'IMAGE_THUMBS':
-            plugin_out = image_thumbs(page)
-
-        elif plugin_name == 'ARTICLES':
-            plugin_out = articles(page)
+        #if plugin_name == 'IMAGE_THUMBS':
+        #    plugin_out = image_thumbs(page)
 
         #elif plugin_name = 'PLUGIN_NAME':
         #	plugin_out, pandoc_opts = plugin_function(plugin_content
 
         # if no plugin is found return the raw content
-        else:
-            print("Warning: Plugin not found:", plugin_name)
-            plugin_out = block
+        #else:
+        #    print("Warning: Plugin not found:", plugin_name)
+        #    plugin_out = block
 
         plugin_blocks.append(plugin_out)
         plugin_pandoc_opts.extend(pandoc_opts)
