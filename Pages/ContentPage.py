@@ -11,22 +11,16 @@ class ContentPage(ContentFilePage):
 
     def __init__(self, content_file):
         self.content_file = content_file
-        #self.rubric = rubric
 
         self.create_date_obj()
 
-        # (comment out later, it should be the default)
-        #out_filename = "index.html"
         page_subdir = url_encode_str(self.content_file.meta['title'])
         out_subdir = os.path.join(self.date_str, page_subdir)
 
         super().__init__( self.content_file,
                           out_subdir = out_subdir )
 
-        #self.rubric.pages.append(self)
         self.site.content_pages.append(self)
-
-        #self.variables['header_title'] = self.rubric.name
 
     def process(self):
         # sorting and page navigation (prev / index / next)
@@ -35,9 +29,6 @@ class ContentPage(ContentFilePage):
         self.set_page_nav()        
 
         self.process_body()
-
-        # add menu
-        #self.variables['rubric_list'] = self.site.rubric_list.menu
 
         self.render()
         self.write_out()
@@ -73,8 +64,8 @@ class ContentPage(ContentFilePage):
                 else:
                     self.next_page = self.site.content_pages[num+1]
                     # (debug prints)
-                    print("SELF", self.content_file.meta['title'])
-                    print("NEXT", self.next_page.content_file.meta['title'])
+                    #print("SELF", self.content_file.meta['title'])
+                    #print("NEXT", self.next_page.content_file.meta['title'])
 
     def set_prev_page(self):
         for num, page in enumerate(self.site.content_pages):
@@ -82,7 +73,7 @@ class ContentPage(ContentFilePage):
                 prev_page_num = num - 1
                 if not prev_page_num < 0:
                     self.prev_page = self.site.content_pages[num-1]
-                    print("PREV", self.prev_page.content_file.meta['title'])
+                    #print("PREV", self.prev_page.content_file.meta['title'])
                 else:
                     self.prev_page = None
 
