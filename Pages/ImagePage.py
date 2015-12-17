@@ -7,7 +7,6 @@ from PIL import Image, ImageOps
 
 from Pages.ContentPage import ContentPage
 from common import copy_file
-import tags
 
 class ImagePage(ContentPage):
 
@@ -24,6 +23,8 @@ class ImagePage(ContentPage):
                                              self.content_file.subpath.subpath,
                                              self.imagefile )
         self.make_thumb()
+        self.variables['imagepage'] = True
+        self.variables['article_class'] = "imagepage"
 
     def process(self):
         # sorting and page navigation (prev, next, index)
@@ -43,14 +44,9 @@ class ImagePage(ContentPage):
     def add_image_body(self):
         '''adding image body'''
         title = self.content_file.meta['title']
-        img_alt = title
-        img_title = title
-        img_src = self.imagefile
-        image_body = tags.IMG.format( "imagepage",
-                                      img_alt,
-                                      img_title,
-                                      img_src )
-        self.variables['body'] = image_body
+        self.variables['img_alt'] = title
+        self.variables['img_title'] = title
+        self.variables['img_src'] = self.imagefile
 
     def copy_image(self):
         copy_file(self.img_in_path_abs, self.out_dir_abs)
